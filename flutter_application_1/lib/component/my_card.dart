@@ -55,7 +55,7 @@ class MyCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('Hoa Hồng'),
+                      Text(nameCard),
                       Container(
                         child: Row(
                           children: [
@@ -64,7 +64,7 @@ class MyCard extends StatelessWidget {
                               color: Colors.amber.shade600,
                               size: 14,
                             ),
-                            Text('5')
+                            Text(star)
                           ],
                         ),
                       )
@@ -76,7 +76,7 @@ class MyCard extends StatelessWidget {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Text('đ100,000'),
+                      Text(price),
                       Container(
                         child: Row(
                           children: [

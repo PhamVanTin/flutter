@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 
-class MyButton extends StatelessWidget {
+class MyCustomButton extends StatelessWidget {
   final Color? color;
   final String? text;
+  final double? height;
+  final double? width;
   final void Function()? onTap;
-  const MyButton({
+  const MyCustomButton({
     super.key,
     required this.color,
     required this.onTap,
     required this.text,
+    this.height,
+    this.width,
   });
 
   @override
@@ -16,8 +20,8 @@ class MyButton extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: 200,
-        height: 60,
+        width: width,
+        height: height,
         decoration:
             BoxDecoration(color: color, borderRadius: BorderRadius.circular(8)),
         child: Center(

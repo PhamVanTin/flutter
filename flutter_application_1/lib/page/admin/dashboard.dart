@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/page/admin/admin_profile.dart';
 import 'package:flutter_application_1/page/admin/budget.dart';
+import 'package:flutter_application_1/page/admin/category/catelogy_list.dart';
 import 'package:flutter_application_1/page/admin/list_user.dart';
 import 'package:flutter_application_1/page/admin/product_admin.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:timeline_tile/timeline_tile.dart';
 
 class AdminDashboard extends StatefulWidget {
   const AdminDashboard({super.key});
@@ -61,8 +64,9 @@ class _AdminDashboardState extends State<AdminDashboard> {
                   text: 'Doanh thu',
                 ),
                 GButton(
-                  icon: Icons.search,
-                  text: 'Search',
+                  icon: FontAwesomeIcons.solidUser,
+                  iconSize: 20,
+                  text: 'User',
                 ),
                 GButton(
                   icon: Icons.settings,

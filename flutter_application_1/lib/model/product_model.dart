@@ -5,7 +5,7 @@ class Product {
   final String salePrice;
   final String imagePath;
   final int? Rating;
-
+  final List<dynamic>? comment;
   Product({
     required this.id,
     required this.name,
@@ -13,6 +13,7 @@ class Product {
     required this.salePrice,
     required this.imagePath,
     this.Rating,
+    this.comment,
   });
 
   factory Product.fromMap(Map<String, dynamic> map) {
@@ -23,6 +24,7 @@ class Product {
       imagePath: map['imagePath'],
       salePrice: map['salePrice'],
       Rating: map['Rating'],
+      comment: map['comment'],
     );
   }
 
@@ -35,8 +37,9 @@ class Product {
       'price': price,
       'imagePath': imagePath,
       'salePrice': salePrice,
-      'Rating': Rating,
+      'Rating': 0,
       'like': [],
+      'comment': [],
     };
   }
 

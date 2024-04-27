@@ -72,7 +72,7 @@ class _OrderHistoryState extends State<OrderHistory> {
                           MaterialPageRoute(
                               builder: (context) => DetailOrder(
                                     billData: billData,
-                                    id: billDocs[index]['id'],
+                                    id: billDocs[index].id,
                                     email: user.email!,
                                     status: billData['status'],
                                   )));
@@ -237,7 +237,7 @@ class _OrderHistoryState extends State<OrderHistory> {
                                           padding: const EdgeInsetsDirectional
                                               .fromSTEB(6, 0, 6, 0),
                                           child: Text(
-                                            billData['billData']['status'],
+                                            billData['status'],
                                             style: const TextStyle(
                                               fontFamily: 'Plus Jakarta Sans',
                                               color: Color(0xFF6F61EF),

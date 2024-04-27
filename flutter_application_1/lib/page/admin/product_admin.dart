@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/component/my_card.dart';
 import 'package:flutter_application_1/controllers/product_controller.dart';
@@ -58,197 +59,245 @@ class _AdminAllProductState extends State<AdminAllProduct> {
   }
 
   @override
-  Widget build(BuildContext context) => Stack(
+  Widget build(BuildContext context) => Scaffold(
+          body: Stack(
+        alignment: AlignmentDirectional.bottomCenter,
         children: [
-          Scaffold(
-            body: SafeArea(
-              top: true,
-              child: Container(
-                width: double.infinity,
-                height: double.infinity,
-                decoration: const BoxDecoration(),
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  children: [
-                    TextField(
-                      onChanged: (value) {
-                        // Khi người dùng thay đổi giá trị trong trường nhập, cập nhật từ khóa tìm kiếm và lọc danh sách sản phẩm
-                        _searchKeyword = value;
-                        _filterProducts(_searchKeyword);
-                      },
-                      decoration: const InputDecoration(
-                        labelText: 'Tìm kiếm',
-                        prefixIcon: Icon(Icons.search),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(6),
-                      child: Container(
-                        width: double.infinity,
-                        height: 36,
-                        decoration: const BoxDecoration(),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.max,
-                          children: [
-                            Expanded(
-                              child: ListView(
-                                padding: EdgeInsets.zero,
-                                scrollDirection: Axis.horizontal,
-                                children: [
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      _filterProducts('');
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      foregroundColor: Colors.white,
-                                      backgroundColor:
-                                          Theme.of(context).colorScheme.primary,
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 24),
-                                      elevation: 3,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8),
-                                      ),
-                                      textStyle: GoogleFonts.getFont(
-                                        'Outfit',
-                                        fontWeight: FontWeight.w500,
-                                        fontSize: 20,
-                                      ),
-                                    ),
-                                    child: const Text('All'),
+          SafeArea(
+            child: Column(
+              children: [
+                TextField(
+                  onChanged: (value) {
+                    // Khi người dùng thay đổi giá trị trong trường nhập, cập nhật từ khóa tìm kiếm và lọc danh sách sản phẩm
+                    _searchKeyword = value;
+                    _filterProducts(_searchKeyword);
+                  },
+                  decoration: const InputDecoration(
+                    labelText: 'Tìm kiếm',
+                    prefixIcon: Icon(Icons.search),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(6),
+                  child: Container(
+                    width: double.infinity,
+                    height: 36,
+                    decoration: const BoxDecoration(),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        Expanded(
+                          child: ListView(
+                            scrollDirection: Axis.horizontal,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  _filterProducts('');
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  foregroundColor: Colors.white,
+                                  backgroundColor:
+                                      Theme.of(context).colorScheme.primary,
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 24),
+                                  elevation: 3,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
                                   ),
-                                ],
+                                  textStyle: GoogleFonts.getFont(
+                                    'Outfit',
+                                    fontWeight: FontWeight.w500,
+                                    fontSize: 20,
+                                  ),
+                                ),
+                                child: const Text('All'),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: StreamBuilder<QuerySnapshot>(
+                      stream: FirebaseFirestore.instance
+                          .collection("products")
+                          .snapshots(),
+                      builder: (context, snapshot) {
+                        if (!snapshot.hasData) {
+                          return Scaffold(
+                            backgroundColor:
+                                Theme.of(context).colorScheme.background,
+                            body: Center(
+                              child: SizedBox(
+                                width: 50,
+                                height: 50,
+                                child: CircularProgressIndicator(
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Theme.of(context).colorScheme.primary),
+                                ),
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: StreamBuilder<QuerySnapshot>(
-                          stream: FirebaseFirestore.instance
-                              .collection("products")
-                              .snapshots(),
-                          builder: (context, snapshot) {
-                            if (!snapshot.hasData) {
-                              return Scaffold(
-                                backgroundColor:
-                                    Theme.of(context).colorScheme.background,
-                                body: Center(
-                                  child: SizedBox(
-                                    width: 50,
-                                    height: 50,
-                                    child: CircularProgressIndicator(
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                          Theme.of(context)
-                                              .colorScheme
-                                              .primary),
-                                    ),
+                          );
+                        }
+                        return GridView.builder(
+                          gridDelegate:
+                              const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            crossAxisSpacing: 1,
+                            mainAxisSpacing: 25,
+                            childAspectRatio: 1,
+                            mainAxisExtent: 270,
+                          ),
+                          scrollDirection: Axis.vertical,
+                          itemCount: snapshot
+                              .data!.docs.length, // Số lượng items trong grid
+                          itemBuilder: (BuildContext context, int index) {
+                            final Map<String, dynamic> product =
+                                snapshot.data!.docs[index].data()
+                                    as Map<String, dynamic>;
+
+                            likes = List<String>.from(
+                                snapshot.data!.docs[index]['like']);
+
+                            isLiked = likes.contains(currentUser.email);
+                            if (product['name']
+                                .toString()
+                                .toLowerCase()
+                                .contains(_searchKeyword)) {
+                              return Container(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 15),
+                                child: InkWell(
+                                  onLongPress: () {
+                                    showCupertinoModalPopup(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return buildActionSheet(context,
+                                            id: product['id']);
+                                      },
+                                    );
+                                  },
+                                  onTap: () {
+                                    // Điều hướng sang trang chi tiết sản phẩm khi nhấn vào sản phẩm
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            FlowerPage(product: product),
+                                      ),
+                                    );
+                                  },
+                                  child: MyCard(
+                                    imagePath: product['imagePath'],
+                                    nameCard: product['name'],
+                                    price: product['price'],
+                                    star: product['Rating'].toString(),
+                                    isLiked: isLiked,
+                                    onTap: () {
+                                      isLiked = !isLiked;
+
+                                      DocumentReference ProductRef =
+                                          FirebaseFirestore.instance
+                                              .collection('products')
+                                              .doc(product['id']);
+                                      if (isLiked == true) {
+                                        ProductRef.update({
+                                          'like': FieldValue.arrayUnion(
+                                              [currentUser.email])
+                                        });
+                                      } else {
+                                        ProductRef.update({
+                                          'like': FieldValue.arrayRemove(
+                                              [currentUser.email])
+                                        });
+                                      }
+                                    },
                                   ),
                                 ),
                               );
                             }
-                            return GridView.builder(
-                              padding: EdgeInsets.zero,
-                              gridDelegate:
-                                  const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 1,
-                                mainAxisSpacing: 25,
-                                childAspectRatio: 1,
-                                mainAxisExtent: 270,
-                              ),
-                              scrollDirection: Axis.vertical,
-                              itemCount: snapshot.data!.docs
-                                  .length, // Số lượng items trong grid
-                              itemBuilder: (BuildContext context, int index) {
-                                final Map<String, dynamic> product =
-                                    snapshot.data!.docs[index].data()
-                                        as Map<String, dynamic>;
-
-                                likes = List<String>.from(
-                                    snapshot.data!.docs[index]['like']);
-
-                                isLiked = likes.contains(currentUser.email);
-                                if (product['name']
-                                    .toString()
-                                    .toLowerCase()
-                                    .contains(_searchKeyword)) {
-                                  return Container(
-                                    padding:
-                                        const EdgeInsets.symmetric(horizontal: 15),
-                                    child: InkWell(
-                                      onTap: () {
-                                        // Điều hướng sang trang chi tiết sản phẩm khi nhấn vào sản phẩm
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) =>
-                                                FlowerPage(product: product),
-                                          ),
-                                        );
-                                      },
-                                      child: MyCard(
-                                        imagePath: product['imagePath'],
-                                        nameCard: product['name'],
-                                        price: product['price'],
-                                        star: '5',
-                                        isLiked: isLiked,
-                                        onTap: () {
-                                          isLiked = !isLiked;
-
-                                          DocumentReference ProductRef =
-                                              FirebaseFirestore.instance
-                                                  .collection('products')
-                                                  .doc(product['id']);
-                                          if (isLiked == true) {
-                                            ProductRef.update({
-                                              'like': FieldValue.arrayUnion(
-                                                  [currentUser.email])
-                                            });
-                                          } else {
-                                            ProductRef.update({
-                                              'like': FieldValue.arrayRemove(
-                                                  [currentUser.email])
-                                            });
-                                          }
-                                        },
-                                      ),
-                                    ),
-                                  );
-                                }
-                                return null;
-                              },
-                            );
-                          }),
-                    ),
-                    Positioned(
-                      bottom: 26.0, // Điều chỉnh khoảng cách từ dưới lên
-                      left: 70,
-                      right: 70,
-                      child: FloatingActionButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) {
-                                // Trả về một widget mới mà không phải là Scaffold
-                                return const Create03ProductWidget();
-                              },
-                            ),
-                          );
-                        },
-                        child: const Icon(
-                          Icons.add,
-                          color: Colors.white,
-                        ),
-                      ),
-                    )
-                  ],
+                            return null;
+                          },
+                        );
+                      }),
                 ),
-              ),
+                GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          // Trả về một widget mới mà không phải là Scaffold
+                          return const Create03ProductWidget();
+                        },
+                      ),
+                    );
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.pink.shade200,
+                        borderRadius: BorderRadius.circular(8),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.shade600,
+                            offset: Offset(4, 4),
+                            blurRadius: 9,
+                            spreadRadius: 1,
+                          ),
+                          BoxShadow(
+                            color: Colors.white,
+                            offset: Offset(-4, -4),
+                            blurRadius: 13,
+                            spreadRadius: 1,
+                          )
+                        ]),
+                    height: 50,
+                    width: 50,
+                    child: Icon(
+                      Icons.add,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         ],
+      ));
+
+  Widget buildActionSheet(BuildContext contextm, {required String id}) =>
+      CupertinoActionSheet(
+        actions: [
+          CupertinoActionSheetAction(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text(
+              'Detail',
+              style: TextStyle(color: Colors.blue),
+            ),
+          ),
+          CupertinoActionSheetAction(
+            onPressed: () {
+              _controller.deleteProduct(id);
+              Navigator.pop(context);
+            },
+            child: Text(
+              'Delete',
+              style: TextStyle(color: Colors.red),
+            ),
+          ),
+        ],
+        cancelButton: CupertinoActionSheetAction(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text(
+            'Cancel',
+            style: TextStyle(color: Colors.red),
+          ),
+        ),
       );
 }

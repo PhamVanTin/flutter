@@ -21,11 +21,18 @@ class ProductController {
         .set(product.toMap());
   }
 
-  Future<void> updateProduct(Product product) async {
+  // Future<void> addComment(Product product, String email) async {
+  //   await FirebaseFirestore.instance
+  //       .collection('products')
+  //       .doc(product.id).collection(email)
+  //       .set(product.toMap());
+  // }
+
+  Future<void> updateProduct(Map<String, dynamic> product, String id) async {
     await FirebaseFirestore.instance
         .collection('products')
-        .doc(product.id)
-        .update(product.toMap());
+        .doc(id)
+        .update(product);
   }
 
   Future<void> deleteProduct(String productId) async {

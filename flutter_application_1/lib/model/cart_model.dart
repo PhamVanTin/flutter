@@ -75,15 +75,17 @@ class CartModel extends ChangeNotifier {
         'price': product.price,
         'saleprice': product.salePrice,
         'quantity': productQuantity,
-        'imagePath': product.imagePath
+        'imagePath': product.imagePath,
+        'rating': 0,
+        'comment': '',
       };
     });
 
     Map<String, dynamic> billData = {
       'address': address,
       'payment': payment,
+      'products': mergedList,
       'shipcost': shipcost,
-      'status': 'Chờ duyệt',
       'total': total // Danh sách các mặt hàng
       // Thêm các trường dữ liệu khác của hóa đơn
     };
@@ -93,6 +95,7 @@ class CartModel extends ChangeNotifier {
         .collection('bill')
         .add({
       'billData': billData,
+      'status': 'Chờ duyệt',
       'timestamp': FieldValue.serverTimestamp(),
     });
   }

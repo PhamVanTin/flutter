@@ -2,6 +2,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/controllers/product_controller.dart';
 import 'package:flutter_application_1/model/product_model.dart';
+import 'package:flutter_application_1/page/admin/dashboard.dart';
 import 'package:flutter_application_1/page/user/home._page.dart';
 import 'package:flutter_application_1/services/firestore.dart';
 import 'package:getwidget/getwidget.dart';
@@ -60,8 +61,8 @@ class _Create03ProductWidgetState extends State<Create03ProductWidget> {
     } else {
       // Chuyển đến màn hình tiếp theo hoặc thực hiện hành động tiếp theo
       uploadAndSaveProduct();
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const UserHomePage()));
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => const AdminDashboard()));
     }
   }
 
@@ -239,8 +240,8 @@ class _Create03ProductWidgetState extends State<Create03ProductWidget> {
                         ),
                         filled: true,
                         fillColor: Colors.white,
-                        contentPadding:
-                            const EdgeInsetsDirectional.fromSTEB(16, 20, 16, 20),
+                        contentPadding: const EdgeInsetsDirectional.fromSTEB(
+                            16, 20, 16, 20),
                       ),
                       style: const TextStyle(
                         fontFamily: 'Outfit',
